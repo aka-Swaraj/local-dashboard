@@ -1,0 +1,18 @@
+<p>
+  <app-time-picker></app-time-picker>
+</p>
+<p>
+  <app-date-picker
+    [(ngModel)]="selectedDate"
+    [date]="selectedDate"
+    [min]="minDate"
+    [max]="maxDate"
+  ></app-date-picker>
+</p>
+
+{{ selectedDate }}
+
+<p>readable</p>
+<p>{{ countdown | json }}</p>
+<p>{{ countdown.toString() }}</p>
+<p>{{ target | date: 'MMM dd, yyyy.' }}</p>
