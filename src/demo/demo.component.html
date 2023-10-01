@@ -1,4 +1,4 @@
-<p>
+<!-- <p>
   <app-time-picker></app-time-picker>
 </p>
 <p>
@@ -8,11 +8,11 @@
     [min]="minDate"
     [max]="maxDate"
   ></app-date-picker>
-</p>
+</p> -->
 
-{{ selectedDate }}
+<!-- {{ selectedDate }} -->
 
-<p>readable</p>
-<p>{{ countdown | json }}</p>
+<!-- <p>readable</p>
+<p>{{ countdown | json }}</p> -->
+<p>{{ target | date: 'MMM dd, yyyy. hh:mm:ss a' }}</p>
 <p>{{ countdown.toString() }}</p>
-<p>{{ target | date: 'MMM dd, yyyy.' }}</p>

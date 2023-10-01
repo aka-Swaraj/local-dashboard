@@ -19,34 +19,77 @@ export interface IUnit {
 }
 
 export function toReadable(millis: number) {
-  var entities: any = {};
+  millis = Math.abs(millis);
   var units: IUnit[] = [
     { label: 'millis', mod: 1000 },
-    { label: 'seconds', mod: 60 },
-    { label: 'minutes', mod: 60 },
-    { label: 'hours', mod: 24 },
-    { label: 'days', mod: 31 },
+    { label: 'seconds', mod: 60 * 1000 },
+    { label: 'minutes', mod: 60 * 60 * 1000 },
+    { label: 'hours', mod: 24 * 60 * 60 * 1000 },
+    { label: 'days', mod: 31 * 24 * 60 * 60 * 1000 },
   ];
-  // calculate the individual unit values...
-  units.forEach(function (u: IUnit) {
-    //millis = (millis - (entities[u.label] = millis % u.mod)) / u.mod;
-  });
-  // convert object to a string representation...
-  var nonZero = function (u: IUnit) {
-    return entities[u.label];
+
+  const steps = {
+    millis0: [1000],
+    seconds: [60, 1000],
+    minutes: [60, 60, 1000],
+    hours00: [24, 60, 60, 1000],
+    days000: [30, 24, 60, 60, 1000],
+    months0: [365, 30, 24, 60, 60, 1000],
   };
-  entities.toString = function () {
-    return units
+
+  const floor = Math.floor;
+
+  const entries = Object.entries(steps).reduce((acc: any, [label, step]) => {
+    const [mod, ...rest] = step;
+    acc[label.replace(/0+/gi, '')] = floor(
+      (millis / rest.reduce((a, i) => a * i, 1)) % mod
+    );
+    return acc;
+  }, {});
+
+  const toString = () => {
+    return Object.entries(entries)
       .reverse()
-      .filter(nonZero)
-      .map(function (u: IUnit) {
-        return (
-          entities[u.label] +
-          ' ' +
-          (entities[u.label] == 1 ? u.label.slice(0, -1) : u.label)
+      .reduce((acc: any, [label, value]) => {
+        acc.push(
+          ` ${prefix(value as number)} ${
+            value == 1 ? label.slice(0, -1) : label
+          }`
         );
-      })
-      .join(', ');
+        return acc;
+      }, [])
+      .join('  ');
   };
-  return entities;
+  return { ...entries, toString };
+
+  // entries = units.reduce((acc: any, item: IUnit, index: number) => {
+  //   if (index > 0) {
+  //     acc[item.label] = (millis / units[index - 1].mod) % item.mod;
+  //   }
+  //   return acc;
+  // }, {});
+
+  // // calculate the individual unit values...
+  // units.forEach(function (u: IUnit) {
+  //   millis = (millis - (entries[u.label] = millis % u.mod)) / u.mod;
+  // });
+
+  // convert object to a string representation...
+  // var nonZero = function (u: IUnit) {
+  //   return entries[u.label];
+  // };
+  // entries.toString = function () {
+  //   return units
+  //     .reverse()
+  //     .filter(nonZero)
+  //     .map(function (u: IUnit) {
+  //       return (
+  //         entries[u.label] +
+  //         ' ' +
+  //         (entries[u.label] == 1 ? u.label.slice(0, -1) : u.label)
+  //       );
+  //     })
+  //     .join(', ');
+  // };
+  return entries;
 }

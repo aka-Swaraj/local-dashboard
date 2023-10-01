@@ -23,13 +23,13 @@ export class DemoComponent implements OnInit {
   maxDate = new Date(2023, 10, 22);
 
   countdown = 0;
-  target = new Date(2023, 11, 25, 10, 0, 0, 0);
+  target = new Date(2023, 11, 24, 22, 0, 0, 0);
 
   constructor() {}
 
   ngOnInit() {
     setInterval(() => {
       this.countdown = toReadable(this.target.getTime() - new Date().getTime());
-    }, 1000);
+    }, 100);
   }
 }
